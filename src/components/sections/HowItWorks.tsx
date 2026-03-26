@@ -1,4 +1,9 @@
-import { Search, CalendarCheck, GraduationCap, ChevronRight } from "lucide-react";
+import {
+  Search,
+  CalendarCheck,
+  GraduationCap,
+  ChevronRight,
+} from "lucide-react";
 
 const STEPS = [
   {
@@ -23,11 +28,14 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-14 px-6 bg-slate-50 border-y border-slate-100">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-8">
-          How It Works
-        </h2>
+    <section className="py-14 px-6">
+      <div>
+        <div className="mb-8 space-y-5">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            How It Works
+          </h2>
+          <div className="border"></div>
+        </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           {STEPS.map((step, index) => (
@@ -41,10 +49,10 @@ export default function HowItWorks() {
 
                 {/* Text */}
                 <div>
-                  <p className="font-semibold text-slate-900 text-sm">
+                  <p className="font-semibold text-slate-900">
                     {step.number}. {step.title}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                  <p className="text-slate-500 mt-0.5 leading-relaxed">
                     {step.description}
                   </p>
                 </div>
@@ -52,7 +60,10 @@ export default function HowItWorks() {
 
               {/* Connector arrow */}
               {index < STEPS.length - 1 && (
-                <ChevronRight size={18} className="text-slate-300 shrink-0 hidden sm:block" />
+                <ChevronRight
+                  size={18}
+                  className="text-slate-300 shrink-0 hidden sm:block"
+                />
               )}
             </div>
           ))}

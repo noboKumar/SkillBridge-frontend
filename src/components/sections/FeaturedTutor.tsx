@@ -13,7 +13,7 @@ interface FeaturedTutorsProps {
 export default function FeaturedTutors({ tutors }: FeaturedTutorsProps) {
   return (
     <section className="px-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="">
         {/* Header */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
