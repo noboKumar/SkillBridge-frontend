@@ -1,6 +1,5 @@
 import RegisterForm from "@/components/sections/auth/RegisterForm";
 import Logo from "@/components/shared/Logo";
-import { GraduationCap } from "lucide-react";
 
 export const metadata = {
   title: "Register - SkillBridge",

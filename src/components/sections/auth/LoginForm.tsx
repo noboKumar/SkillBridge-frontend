@@ -4,15 +4,31 @@ import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { axiosInstance } from "@/lib/axios";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     const email = formData.get("email");
     const password = formData.get("password");
-    // TODO: call your auth API here
-    console.log({ email, password });
+    setLoading(true);
+
+    try {
+      const res = await axiosInstance.post("/auth/login", {
+        email,
+        password,
+      });
+
+      return res.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error logging in:", error.message);
+      }
+    } finally {
+      setLoading(false); 
+    }
   }
 
   return (
@@ -71,13 +87,16 @@ export default function LoginForm() {
 
       {/* Submit */}
       <Button type="submit" className="w-full py-5">
-        Login to your account
+        {loading ? "Logging in..." : "Login"}
       </Button>
 
       {/* Register link */}
       <p className="text-center text-sm text-slate-500">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-primary font-semibold hover:underline">
+        <Link
+          href="/register"
+          className="text-primary font-semibold hover:underline"
+        >
           Register
         </Link>
       </p>

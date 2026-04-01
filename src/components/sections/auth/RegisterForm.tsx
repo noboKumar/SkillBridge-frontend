@@ -5,12 +5,14 @@ import { Mail, Lock, Eye, EyeOff, User, Camera } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { axiosInstance } from "@/lib/axios";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -21,12 +23,27 @@ export default function RegisterForm() {
   }
 
   async function handleSubmit(formData: FormData) {
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const avatar = fileInputRef.current?.files?.[0];
-    // TODO: call your auth API here
-    console.log({ name, email, password, avatar });
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    // const avatar = fileInputRef.current?.files?.[0];
+    setLoading(true);
+
+    try {
+      const res = await axiosInstance.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
+
+      console.log("User registered:", res.data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error registering user:", error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -35,7 +52,6 @@ export default function RegisterForm() {
       <div className="flex flex-col items-center gap-2">
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()}
           className="relative group w-20 h-20 rounded-full ring-2 ring-sky-200 ring-offset-2 focus:outline-none focus:ring-sky-400 overflow-hidden bg-sky-50 flex items-center justify-center transition-all"
           aria-label="Upload profile photo"
         >
@@ -171,8 +187,8 @@ export default function RegisterForm() {
       </div>
 
       {/* Submit */}
-      <Button type="submit" className="w-full py-5">
-        Create account
+      <Button disabled={loading} type="submit" className="w-full py-5">
+        {loading ? "Creating..." : "Create account"}
       </Button>
 
       {/* Login link */}

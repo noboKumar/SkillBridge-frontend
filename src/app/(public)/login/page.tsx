@@ -2,7 +2,7 @@ import LoginForm from "@/components/sections/auth/LoginForm";
 import Logo from "@/components/shared/Logo";
 
 export const metadata = {
-  title: "Login – SkillBridge",
+  title: "Login - SkillBridge",
   description: "Sign in to your SkillBridge account.",
 };
 
