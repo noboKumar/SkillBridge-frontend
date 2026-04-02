@@ -20,6 +20,14 @@ export default function LoginForm() {
         email,
         password,
       });
+      console.log(
+        "User logged in",
+        JSON.stringify(res.data.data.user),
+        res.data.data.token,
+      );
+
+      localStorage.setItem("token", res.data.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.data.user));
 
       return res.data;
     } catch (error: unknown) {
@@ -27,7 +35,7 @@ export default function LoginForm() {
         console.error("Error logging in:", error.message);
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 
@@ -86,7 +94,7 @@ export default function LoginForm() {
       </div>
 
       {/* Submit */}
-      <Button type="submit" className="w-full py-5">
+      <Button disabled={loading} type="submit" className="w-full py-5">
         {loading ? "Logging in..." : "Login"}
       </Button>
 

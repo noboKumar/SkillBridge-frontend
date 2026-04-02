@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Button } from "../ui/button";
 import { navLinks } from "@/types";
 import Logo from "@/components/shared/Logo";
+import UserAvatar from "./UserAvatar";
 
 const NavBar = () => {
   const links: navLinks[] = [
@@ -10,6 +10,7 @@ const NavBar = () => {
     { label: "Services", href: "/services" },
     { label: "Contact", href: "/contact" },
   ];
+
   return (
     <div className="flex items-center justify-between border-b ">
       {/* logo */}
@@ -27,12 +28,7 @@ const NavBar = () => {
         </div>
         {/* button */}
         <div className="space-x-2">
-          <Button variant={"outline"}>
-            <Link href={"/register"}>Register</Link>
-          </Button>
-          <Button>
-            <Link href={"/login"}>Login</Link>
-          </Button>
+          <UserAvatar></UserAvatar>
         </div>
       </div>
     </div>
