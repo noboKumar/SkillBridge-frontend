@@ -48,7 +48,6 @@ export default function RegisterForm() {
       const data = await res.json();
       imageUrl = data.data.url;
     }
-    console.log(imageUrl);
 
     const payload: registerPayload = {
       name,
@@ -59,6 +58,15 @@ export default function RegisterForm() {
 
     try {
       const res = await axiosInstance.post("/auth/register", payload);
+
+      // login user
+      const loginRes = await axiosInstance.post("/auth/login", {
+        email,
+        password,
+      });
+
+      localStorage.setItem("token", loginRes.data.data.token);
+      window.location.href = "/";
 
       console.log("User registered:", res.data);
     } catch (error: unknown) {
@@ -71,7 +79,14 @@ export default function RegisterForm() {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-5">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        handleSubmit(formData);
+      }}
+      className="space-y-5"
+    >
       {/* Profile Photo */}
       <div className="flex flex-col items-center gap-2">
         <button

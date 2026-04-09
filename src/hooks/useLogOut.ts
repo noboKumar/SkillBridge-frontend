@@ -1,12 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 
 export const useLogout = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const logout = () => {
@@ -34,7 +32,7 @@ export const useLogout = () => {
         queryClient.clear();
 
         // redirect
-        router.push("/login");
+        window.location.href = "/login";
       }
     });
   };
