@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/axios";
+import { registerPayload } from "@/types";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,15 +27,38 @@ export default function RegisterForm() {
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    // const avatar = fileInputRef.current?.files?.[0];
+    const avatar = fileInputRef.current?.files?.[0];
+
     setLoading(true);
 
+    let imageUrl = "";
+
+    if (avatar) {
+      const formData = new FormData();
+      formData.append("image", avatar);
+
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      const data = await res.json();
+      imageUrl = data.data.url;
+    }
+    console.log(imageUrl);
+
+    const payload: registerPayload = {
+      name,
+      email,
+      password,
+      profilePhoto: imageUrl,
+    };
+
     try {
-      const res = await axiosInstance.post("/auth/register", {
-        name,
-        email,
-        password,
-      });
+      const res = await axiosInstance.post("/auth/register", payload);
 
       console.log("User registered:", res.data);
     } catch (error: unknown) {
@@ -52,7 +76,8 @@ export default function RegisterForm() {
       <div className="flex flex-col items-center gap-2">
         <button
           type="button"
-          className="relative group w-20 h-20 rounded-full ring-2 ring-sky-200 ring-offset-2 focus:outline-none focus:ring-sky-400 overflow-hidden bg-sky-50 flex items-center justify-center transition-all"
+          onClick={() => fileInputRef.current?.click()}
+          className="relative group w-20 h-20 rounded-full ring-2 ring-sky-200 ring-offset-2 focus:outline-none focus:ring-sky-400 overflow-hidden bg-sky-50 flex items-center justify-center transition-all cursor-pointer hover:ring-sky-300"
           aria-label="Upload profile photo"
         >
           {avatarPreview ? (
