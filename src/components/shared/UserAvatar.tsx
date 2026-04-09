@@ -1,12 +1,13 @@
-"use client"
+"use client";
 import { useAuth } from "@/hooks/useAuth";
 import { User } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import LogoutButton from "./LogoutButton";
 
 const UserAvatar = () => {
-    const { user } = useAuth();
+  const { user } = useAuth();
   return (
     <div className="flex items-center gap-3">
       {/* Profile Photo / Fallback Icon */}
@@ -26,10 +27,13 @@ const UserAvatar = () => {
             )}
           </div>
 
-          {/* User Name */}
-          <h1 className="text-lg font-medium">
-            Welcome, <span className="font-bold">{user.name}</span>
-          </h1>
+          <div>
+            {/* User Name */}
+            <h1 className="text-lg font-medium">
+              Welcome, <span className="font-bold">{user.name}</span>
+            </h1>
+            <LogoutButton></LogoutButton>
+          </div>
         </>
       ) : (
         <>

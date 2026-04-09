@@ -4,6 +4,7 @@ import "@/app/styles/globals.css";
 import NavBar from "@/components/shared/NavBar";
 import Footer from "@/components/shared/Footer";
 import QueryProvider from "@/providers/queryProvider";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
     >
       <body className="w-11/12 mx-auto">
         <QueryProvider>
+          <Toaster position="top-center"></Toaster>
           <NavBar></NavBar>
           {children}
         </QueryProvider>
