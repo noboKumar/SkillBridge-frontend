@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Mail, Lock, Eye, EyeOff, User, Camera } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  User,
+  Camera,
+  ChevronDown,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -10,11 +18,17 @@ import { RegisterPayload } from "@/types";
 
 type UserRole = "STUDENT" | "TUTOR";
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface TeacherPayload extends RegisterPayload {
   bio: string;
   hourlyRate: number;
   experienceYears: number;
   role: string;
+  categoryId: string;
 }
 
 export default function RegisterForm() {
@@ -22,9 +36,31 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [showCategoriesDropdown, setShowCategoriesDropdown] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  // Fetch categories on mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  async function fetchCategories() {
+    try {
+      setCategoriesLoading(true);
+      const res = await axiosInstance.get("/categories");
+      setCategories(res.data.data || res.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setPasswordError("Failed to load categories");
+    } finally {
+      setCategoriesLoading(false);
+    }
+  }
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -33,6 +69,10 @@ export default function RegisterForm() {
     reader.onload = () => setAvatarPreview(reader.result as string);
     reader.readAsDataURL(file);
   }
+
+  const selectedCategory = categories.find(
+    (cat) => cat.id === selectedCategoryId,
+  );
 
   async function handleSubmit(formData: FormData) {
     const name = formData.get("name") as string;
@@ -49,6 +89,12 @@ export default function RegisterForm() {
 
     if (password.length < 6) {
       setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    // Validate teacher has selected a category
+    if (userRole === "TUTOR" && !selectedCategoryId) {
+      setPasswordError("Please select a category");
       return;
     }
 
@@ -94,6 +140,7 @@ export default function RegisterForm() {
           hourlyRate,
           experienceYears,
           role: userRole,
+          categoryId: selectedCategoryId,
         };
       }
 
@@ -112,6 +159,7 @@ export default function RegisterForm() {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Error registering user:", error.message);
+        setPasswordError(error.message || "Registration failed");
       }
     } finally {
       setLoading(false);
@@ -298,6 +346,82 @@ export default function RegisterForm() {
       {/* Teacher-Only Fields */}
       {userRole === "TUTOR" && (
         <>
+          {/* Category Dropdown (Single Select) */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Teaching Category
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() =>
+                  setShowCategoriesDropdown(!showCategoriesDropdown)
+                }
+                disabled={categoriesLoading}
+                className="w-full flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-400 focus:border-sky-400 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="text-sm text-slate-700 flex-1">
+                  {categoriesLoading
+                    ? "Loading categories..."
+                    : selectedCategory
+                      ? selectedCategory.name
+                      : "Select a category..."}
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`text-slate-400 transition-transform ${
+                    showCategoriesDropdown ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown Menu */}
+              {showCategoriesDropdown && !categoriesLoading && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-lg z-10 max-h-64 overflow-y-auto">
+                  {categories.length === 0 ? (
+                    <div className="px-4 py-3 text-sm text-slate-500 text-center">
+                      No categories available
+                    </div>
+                  ) : (
+                    categories.map((category) => (
+                      <button
+                        key={category.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategoryId(category.id);
+                          setShowCategoriesDropdown(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-100 last:border-b-0 transition-colors ${
+                          selectedCategoryId === category.id
+                            ? "bg-sky-50 border-l-4 border-l-sky-500"
+                            : "hover:bg-slate-50"
+                        }`}
+                      >
+                        <div
+                          className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                            selectedCategoryId === category.id
+                              ? "border-sky-500 bg-sky-500"
+                              : "border-slate-300"
+                          }`}
+                        >
+                          {selectedCategoryId === category.id && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <span className="text-sm text-slate-700">
+                          {category.name}
+                        </span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Bio */}
           <div className="space-y-1.5">
             <label
