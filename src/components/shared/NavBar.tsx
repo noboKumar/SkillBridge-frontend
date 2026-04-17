@@ -13,13 +13,18 @@ const NavBar = () => {
   return (
     <div className="flex items-center justify-between border-b ">
       {/* logo */}
-      <Logo></Logo>
+      <Link href="/">
+        <Logo></Logo>
+      </Link>
       <div className="flex items-center gap-5">
-        {/* links */}
+        {/* links */}  
         <div>
           <ul className="flex items-center gap-5">
             {links.map((link) => (
-              <li className="hover:underline font-medium text-gray-600" key={link.href}>
+              <li
+                className="hover:underline font-medium text-gray-600"
+                key={link.href}
+              >
                 <Link href={link.href}>{link.label}</Link>
               </li>
             ))}

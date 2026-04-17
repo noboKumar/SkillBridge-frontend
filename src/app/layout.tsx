@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SkillBridge",
   description: "SkillBridge App",
+  icons: {
+    icon: "/skillbridge_logo.png",
+  },
 };
 
 export default function RootLayout({
