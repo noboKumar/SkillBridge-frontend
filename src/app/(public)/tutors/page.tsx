@@ -10,8 +10,8 @@ async function getTutors() {
 
 export default async function TutorPage() {
   const res = await getTutors();
-  const tutors = res.data;
-  console.log(tutors);
+
+  const tutors = res?.data;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-blue-50 py-12">

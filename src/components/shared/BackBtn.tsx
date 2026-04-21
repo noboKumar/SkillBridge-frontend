@@ -16,7 +16,7 @@ const BackBtn = () => {
           router.push("/tutors");
         }
       }}
-      className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-4 px-5 py-2 cursor-pointer"
+      className="m-4"
     >
       <ArrowLeft size={18} />
       <span className="font-bold">Back</span>

@@ -20,7 +20,7 @@ const UserAvatar = () => {
                 alt={user.name}
                 width={100}
                 height={100}
-                className="w-full h-full object-cover "
+                className="w-full h-full object-cover rounded-full"
               />
             ) : (
               <User size={20} className="text-slate-500" />
