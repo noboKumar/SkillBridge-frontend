@@ -115,3 +115,26 @@ export interface Booking {
 export type paymentStatus = "PENDING" | "SUCCESS" | "FAILED" | "REFUNDED";
 
 export type bookingStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+
+export interface PaymentIntentRequest {
+  amount: number;
+  currency: string;
+  metadata?: Record<string, string>;
+}
+
+export interface PaymentIntentResponse {
+  client_secret: string;
+  payment_intent_id: string;
+}
+
+export interface PaymentFormProps {
+  onSuccess?: (paymentIntentId: string) => void;
+  onError?: (error: string) => void;
+}
+
+export interface CreatePaymentIntentBody {
+  amount: number;
+  currency?: string;
+  booking_id: string;
+  session_title?: string;
+}
