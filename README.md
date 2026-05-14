@@ -6,6 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-7.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![Stripe](https://img.shields.io/badge/Stripe-Integration-6772E5?style=for-the-badge&logo=stripe)](https://stripe.com/)
 
 ---
 
@@ -38,6 +39,7 @@
 - **Components:** shadcn/ui
 - **Icons:** Lucide React
 - **Animations:** Framer Motion & CSS Transitions
+- **Payments:** Stripe (React Stripe JS)
 - **State Management:** React Context & TanStack Query
 
 ### **Backend**
@@ -55,6 +57,7 @@
 - **Smart Search:** Filter tutors by subject, rating, and price.
 - **Booking System:** Seamlessly schedule 1-on-1 sessions.
 - **Interactive Dashboard:** Track upcoming and past sessions.
+- **Secure Payments:** Integrated Stripe checkout for booking sessions.
 - **Reviews:** Leave feedback for tutors after completed sessions.
 
 ### **For Tutors 👨‍🏫**
@@ -92,9 +95,11 @@
 
 3. **Configure Environment Variables:**
    Create a `.env.local` file in the root:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000/api
-   ```
+    ```env
+    NEXT_PUBLIC_API_URL=http://localhost:5000/api
+    NEXT_PUBLIC_IMGBB_API=your_imgbb_api_key
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+    ```
 
 4. **Run the development server:**
    ```bash
@@ -104,7 +109,7 @@
 ### **Backend Setup**
 1. Navigate to the backend directory.
 2. Install dependencies: `npm install`.
-3. Configure `.env` with `DATABASE_URL` and `JWT_SECRET`.
+3. Configure `.env` with `DATABASE_URL`, `JWT_SECRET`, and `STRIPE_SECRET_KEY`.
 4. Run Prisma migrations: `npx prisma migrate dev`.
 5. Start backend: `npm run dev`.
 
